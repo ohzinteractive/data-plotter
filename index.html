@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <script src="function-grapher.js"></script>
+    </head>
+    <body>
+        <script type="module">
+            class DebugGraph
+            {
+                constructor()
+                {
+                    this.graph = new FunctionGrapher('debug-graph');
+                }
+
+                update(sample)
+                {
+                    this.graph.draw_dynamic_live_array(sample, 0, true, '#ff0000');
+                }
+            }
+
+            class RenderLoop
+            {
+                start()
+                {
+                    this.debug_graph = new DebugGraph();
+                    this.t = 0;
+
+                    this.update();
+                }
+
+                update()
+                {
+                    this.debug_graph.update(Math.sin(this.t));
+
+                    this.t += 0.016;
+
+                    requestAnimationFrame(this.update.bind(this));
+                }
+            }
+
+            new RenderLoop().start();
+        </script>
+    </body>
+</html>
