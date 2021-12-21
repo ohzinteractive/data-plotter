@@ -32,9 +32,9 @@
   "author": "OHZI Interactive",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ohzinteractive/core/issues"
+    "url": "https://github.com/ohzinteractive/data-plotter/issues"
   },
-  "homepage": "https://github.com/ohzinteractive/core#readme",
+  "homepage": "https://github.com/ohzinteractive/data-plotter",
   "devDependencies": {
     "cross-var": "^1.1.0",
     "rollup": "^2.44.0",
