@@ -1,0 +1,44 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <script type="module">
+            import { DataPlotter } from './build/data-plotter.js';
+
+            class AwesomeGraph
+            {
+                constructor()
+                {
+                    this.graph = new DataPlotter({ name:'Graph of Sine function' });
+                }
+
+                update(sample)
+                {
+                    this.graph.draw_dynamic_live_array(sample, 0, true, '#70b9fc');
+                }
+            }
+
+            class RenderLoop
+            {
+                start()
+                {
+                    this.awesome_graph = new AwesomeGraph();
+                    this.t = 0;
+
+                    this.update();
+                }
+
+                update()
+                {
+                    this.awesome_graph.update(Math.sin(this.t));
+
+                    this.t += 0.016;
+
+                    requestAnimationFrame(this.update.bind(this));
+                }
+            }
+
+            new RenderLoop().start();
+        </script>
+    </body>
+</html>
