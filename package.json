@@ -1,7 +1,8 @@
 {
   "name": "data-plotter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "2D Data Plotter",
+  "module": "examples/build/data-plotter.js",
   "source": "src/index.js",
   "types": "types/index.d.ts",
   "files": [
