@@ -1,53 +1,72 @@
 class DataPlotter
 {
-  constructor({ name = '', container_class = undefined, width = 400, height = 100 })
+  constructor({
+    id = '',
+    name = '',
+    container_selector = undefined,
+    width = 400,
+    height = 100,
+    raw_data_suffix = ''
+  })
   {
-    let graph_container = document.querySelector(`.${container_class}`);
+    let parent = document.querySelector(container_selector);
 
-    if (!graph_container)
+    if (!parent)
     {
-      graph_container = document.createElement('div');
-      graph_container.classList.add('data-plotter');
-      graph_container.style.display = 'flex';
+      parent = document.createElement('div');
+      parent.classList.add('data-plotter');
+      parent.style.display = 'flex';
 
-      graph_container.style['flex-direction'] = 'column';
-      graph_container.style['z-index'] = 999;
-      graph_container.style['pointer-events'] = 'none';
-      graph_container.style['flex-wrap'] = 'wrap';
+      parent.style['flex-direction'] = 'column';
+      parent.style['z-index'] = 999;
+      parent.style['pointer-events'] = 'none';
+      parent.style['flex-wrap'] = 'wrap';
 
-      graph_container.style.width = 'fit-content';
-      graph_container.style.position = 'relative';
+      parent.style.width = 'fit-content';
 
-      document.body.appendChild(graph_container);
+      document.body.appendChild(parent);
     }
+
+    this.container = document.createElement('div');
+
+    if (id)
+    {
+      this.container.dataset.id = id;
+    }
+
+    this.container.style.position = 'relative';
+    this.container.style.margin = '5px';
+    this.container.style.marginTop = '2px';
+    parent.appendChild(this.container);
 
     const name_label = document.createElement('div');
     name_label.textContent = name;
     name_label.style.color = '#000000';
     name_label.style.marginLeft = '5px';
     name_label.style.marginTop = '5px';
+    name_label.style.marginBottom = '5px';
     name_label.style.fontFamily = 'Arial';
-    graph_container.appendChild(name_label);
+    this.container.appendChild(name_label);
 
-    const canvas = document.createElement('canvas');
-    canvas.width = width * window.devicePixelRatio;
-    canvas.height = height * window.devicePixelRatio;
+    this.canvas = document.createElement('canvas');
+    this.canvas.style.display = 'flex';
 
-    canvas.style.width  = width + 'px';
-    canvas.style.height = height + 'px';
-    canvas.style.margin = '5px';
-    canvas.style.marginTop = '2px';
-    graph_container.appendChild(canvas);
+    this.on_resize(width, height);
+
+    this.container.appendChild(this.canvas);
 
     this.raw_data_label = document.createElement('div');
+    this.raw_data_label.classList.add('data-plotter__raw-data');
     this.raw_data_label.style.position = 'absolute';
-    this.raw_data_label.style.bottom = '6px';
-    this.raw_data_label.style.right = '10px';
+    this.raw_data_label.style.bottom = '4px';
+    this.raw_data_label.style.right = '4px';
     this.raw_data_label.style['font-family'] = 'Arial';
     this.raw_data_label.style['font-size'] = '12px';
-    graph_container.appendChild(this.raw_data_label);
+    this.container.appendChild(this.raw_data_label);
 
-    this.ctx = canvas.getContext('2d');
+    this.raw_data_suffix = raw_data_suffix;
+
+    this.ctx = this.canvas.getContext('2d');
 
     this.live_data_array = [];
 
@@ -55,6 +74,15 @@ class DataPlotter
     {
       this.live_data_array.push(0);
     }
+  }
+
+  on_resize(width, height)
+  {
+    this.canvas.width = width * window.devicePixelRatio;
+    this.canvas.height = height * window.devicePixelRatio;
+
+    this.canvas.style.width  = width + 'px';
+    this.canvas.style.height = height + 'px';
   }
 
   draw_function(func, min_x = 0, max_x = 1, graph_height = 1, color = '#FF0000', thick = 1)
@@ -135,7 +163,7 @@ class DataPlotter
 
   draw_static_live_array(value, graph_height = 1, baseline = 0, centered_origin = false, color = '#70b9fc', thick = 1)
   {
-    this.raw_data_label.textContent = value.toFixed(2);
+    this.raw_data_label.textContent = `${value.toFixed(2)}${this.raw_data_suffix}`;
 
     this.live_data_array.push(value);
     this.live_data_array.shift();
@@ -152,7 +180,7 @@ class DataPlotter
 
   draw_dynamic_live_array(value, baseline = 0, centered_origin = false, color = '#70b9fc', thick = 1)
   {
-    this.raw_data_label.textContent = value.toFixed(2);
+    this.raw_data_label.textContent = `${value.toFixed(2)}${this.raw_data_suffix}`;
 
     this.live_data_array.push(value);
     this.live_data_array.shift();
