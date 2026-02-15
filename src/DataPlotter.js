@@ -6,11 +6,13 @@ class DataPlotter
     container_selector = undefined,
     width = 400,
     height = 100,
-    raw_data_suffix = ''
+    raw_data_suffix = '',
+    background_color = '#FFFFFF',
+    text_color = '#000000',
+    center_line_color = '#808080'
   })
   {
     let parent = document.querySelector(container_selector);
-
     if (!parent)
     {
       parent = document.createElement('div');
@@ -27,6 +29,10 @@ class DataPlotter
       document.body.appendChild(parent);
     }
 
+    this.background_color = background_color;
+    this.text_color = text_color;
+    this.center_line_color = center_line_color;
+
     this.container = document.createElement('div');
 
     if (id)
@@ -41,7 +47,7 @@ class DataPlotter
 
     const name_label = document.createElement('div');
     name_label.textContent = name;
-    name_label.style.color = '#000000';
+    name_label.style.color = text_color;
     name_label.style.marginLeft = '5px';
     name_label.style.marginTop = '5px';
     name_label.style.marginBottom = '5px';
@@ -60,6 +66,7 @@ class DataPlotter
     this.raw_data_label.style.position = 'absolute';
     this.raw_data_label.style.bottom = '4px';
     this.raw_data_label.style.right = '4px';
+    this.raw_data_label.style.color = text_color;
     this.raw_data_label.style['font-family'] = 'Arial';
     this.raw_data_label.style['font-size'] = '12px';
     this.container.appendChild(this.raw_data_label);
@@ -90,7 +97,7 @@ class DataPlotter
     let ctx = this.ctx;
     let canvas_length = ctx.canvas.width;
 
-    ctx.fillStyle = '#888888';
+    ctx.fillStyle = this.background_color;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     this.showAxes();
@@ -123,7 +130,8 @@ class DataPlotter
     let ctx = this.ctx;
     let canvas_length = ctx.canvas.width;
 
-    ctx.fillStyle = '#f2f2f2';
+    ctx.fillStyle = this.background_color;
+
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ctx.beginPath();
@@ -212,7 +220,7 @@ class DataPlotter
     const left_right_padding = 10;
 
     this.ctx.font = '20px Arial';
-    this.ctx.fillStyle  = '#000000';
+    this.ctx.fillStyle  = this.text_color;
     this.ctx.textBaseline = 'alphabetic';
     this.ctx.fillText('-' + value.toFixed(1), left_right_padding, this.ctx.canvas.height - top_bottom_padding);
     this.ctx.textBaseline = 'hanging';
@@ -221,7 +229,7 @@ class DataPlotter
     // Center line
     this.ctx.beginPath();
     this.ctx.lineWidth = 1;
-    this.ctx.strokeStyle = '#BBBBBB';
+    this.ctx.strokeStyle = this.center_line_color;
     this.ctx.moveTo(0, this.ctx.canvas.height / 2);
     this.ctx.lineTo(this.ctx.canvas.width, this.ctx.canvas.height / 2);
     this.ctx.stroke();
@@ -230,7 +238,7 @@ class DataPlotter
   draw_max_label(value)
   {
     this.ctx.font = '20px Arial';
-    this.ctx.fillStyle  = '#000000';
+    this.ctx.fillStyle  = this.text_color;
     this.ctx.textBaseline = 'hanging';
     this.ctx.fillText(value.toFixed(1), 5, 8);
   }
